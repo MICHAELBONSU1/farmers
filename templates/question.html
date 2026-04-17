@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ question.title }} - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="d-flex justify-between align-center mb-3">
+                <span class="category-tab" style="color: #1A1A1A;">{{ question.category|title if question.category else 'General' }}</span>
+                {% if question.solved %}
+                <span class="solved-badge">Solved</span>
+                {% else %}
+                <span class="unsolved-badge">Pending</span>
+                {% endif %}
+            </div>
+            <h1 style="color: #1A1A1A;">{{ question.title }}</h1>
+            <div class="forum-item-meta mb-3" style="color: #4A4A4A;">
+                <span style="color: #4A4A4A;">👤 {{ question.author.username }}</span>
+                <span style="color: #4A4A4A;">📅 {{ question.created_at.strftime('%Y-%m-%d') }}</span>
+            </div>
+            <p style="font-size: 1.125rem; line-height: 1.8; color: #1A1A1A;">{{ question.description }}</p>
+        </div>
+    </div>
+
+    <h2 class="mb-3" style="color: #1A1A1A;">Answers ({{ answers|length }})</h2>
+
+    {% if answers %}
+    <div class="forum-list mb-4">
+        {% for answer in answers %}
+        <div class="forum-item {% if answer.is_solution %}style="border-left: 4px solid var(--success);"{% endif %}">
+            <div class="d-flex justify-between align-center mb-2">
+                <div>
+                    <strong style="color: #1A1A1A;">{{ answer.author.username }}</strong>
+                    {% if answer.is_solution %}
+                    <span class="solved-badge ml-2">Best Answer</span>
+                    {% endif %}
+                </div>
+                <div class="d-flex align-center gap-2">
+                    <span style="color: #4A4A4A;">👍 {{ answer.upvotes }}</span>
+                    <a href="{{ url_for('upvote_answer', answer_id=answer.id) }}" class="btn btn-sm btn-outline">Upvote</a>
+                    {% if question.author_id == current_user.id and not answer.is_solution %}
+                    <a href="{{ url_for('mark_solution', answer_id=answer.id) }}" class="btn btn-sm btn-primary">Mark Solution</a>
+                    {% endif %}
+                </div>
+            </div>
+            <p style="color: #1A1A1A;">{{ answer.content }}</p>
+            <div class="forum-item-meta">
+                <span style="color: #4A4A4A;">{{ answer.created_at.strftime('%Y-%m-%d') }}</span>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <p style="color: #4A4A4A;">No answers yet. Be the first to help!</p>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <div class="card-body">
+            <h3 style="color: #1A1A1A;">Post Your Answer</h3>
+            <form method="POST" action="{{ url_for('post_answer', question_id=question.id) }}">
+                <div class="form-group">
+                    <textarea class="form-textarea" name="content" rows="6" placeholder="Share your knowledge or experience..." required></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Post Answer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

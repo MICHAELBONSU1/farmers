@@ -1,0 +1,300 @@
+ the lso/* Professional Chat UI - WhatsApp/Slack Style */
+
+/* Chat Container */
+.chat-container {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    border-radius: 0;
+    margin: 0;
+    z-index: 1000;
+
+    box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    overflow: hidden;
+    background: #f5f5f5;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Header */
+.chat-header {
+    background: #075e54;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-bottom: none;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.profile-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    color: white;
+    font-weight: 600;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+.chat-header-info h4 {
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.chat-header-info small {
+    opacity: 0.9;
+    font-size: 0.85rem;
+}
+
+/* Messages Area */
+.chat-messages {
+    background: #e5ddd5 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52"><defs><pattern id="grain" width="52" height="52" patternUnits="userSpaceOnUse"><circle cx="26" cy="26" r="1" fill="%23e0e0e0" opacity="0.4"/></pattern></defs><rect width="52" height="52" fill="url(%23grain)"/></svg>') repeat;
+    background: #e5ddd5 url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="52" height="52" viewBox="0 0 52 52"><defs><pattern id="grain" width="52" height="52" patternUnits="userSpaceOnUse"><circle cx="26" cy="26" r="1" fill="%23e0e0e0" opacity="0.4"/></pattern></defs><rect width="52" height="52" fill="url(%23grain)"/></svg>') repeat;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+    height: calc(100vh - 80px);
+}
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+}
+
+.chat-messages::-webkit-scrollbar {
+    width: 4px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 2px;
+}
+
+/* Message Bubbles */
+.message-bubble {
+    display: flex;
+    gap: 0.75rem;
+    max-width: 75%;
+    animation: messageSlide 0.3s ease-out;
+}
+
+@keyframes messageSlide {
+    from { 
+        opacity: 0; 
+        transform: translateY(15px) scale(0.95); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+.message-bubble.own {
+    margin-left: auto;
+    flex-direction: row-reverse;
+}
+
+.message-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.message-bubble.other .message-avatar {
+    background: #e9ecef;
+    color: #667781;
+}
+
+.message-bubble.own .message-avatar {
+    background: #25d366;
+    color: white;
+}
+
+.message-content {
+    background: white;
+    padding: 0.875rem 1.125rem;
+    border-radius: 18px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+    max-width: 100%;
+    line-height: 1.4;
+    font-weight: 500;
+    font-size: 0.95rem;
+    border-bottom-left-radius: 4px;
+}
+
+.message-bubble.own .message-content {
+    background: #dcf8c6;
+    color: #000;
+    font-weight: 500;
+    border-bottom-right-radius: 4px;
+    box-shadow: 0 2px 8px rgba(37,211,102,0.3);
+}
+
+.message-time {
+    font-size: 0.75rem;
+    opacity: 0.7;
+    margin-top: 0.25rem;
+    display: block;
+    font-weight: 400;
+}
+
+/* Input Area */
+.chat-input {
+    background: #f0f0f0;
+    border-top: 1px solid #e0e0e0;
+    padding: 1rem 1.5rem;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    z-index: 1001;
+    box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+
+.chat-input form {
+    width: 100%;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.chat-input input {
+    flex: 1;
+    padding: 0.875rem 1.25rem;
+    border: 1px solid #d0d0d0;
+    border-radius: 25px;
+    font-size: 0.95rem;
+    background: white;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.chat-input input:focus {
+    border-color: #25d366;
+    box-shadow: 0 0 0 3px rgba(37,211,102,0.1);
+}
+
+.btn-send {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: #25d366;
+    color: white;
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(37,211,102,0.4);
+}
+
+.btn-send:hover:not(:disabled) {
+    background: #128c7e;
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(37,211,102,0.5);
+}
+
+.btn-send:disabled {
+    background: #b0b0b0;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* Empty State */
+.empty-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #667781;
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.empty-chat-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .chat-container {
+        height: 90vh;
+        border-radius: 0;
+        margin: 0 -1rem;
+    }
+    
+    .message-bubble {
+        max-width: 85%;
+    }
+    
+    .chat-header {
+        padding: 1rem;
+    }
+    
+    .chat-input {
+        padding: 1rem;
+    }
+}
+
+/* Professional Typography */
+.message-content p {
+    margin: 0;
+    font-weight: 500;
+    color: #000;
+    line-height: 1.4;
+}
+
+.message-bubble.own .message-content p {
+    color: #000;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+    .chat-messages {
+        background: #202c33;
+        color: #e9edef;
+    }
+    
+    .message-content {
+        background: #2a3942;
+        color: #e9edef;
+    }
+    
+    .message-bubble.own .message-content {
+        background: #005c4b;
+        color: #e9edef;
+    }
+}

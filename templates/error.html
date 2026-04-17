@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+
+{% block title %}Error - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header" style="background: linear-gradient(135deg, var(--danger), var(--danger-light));">
+        <h1 style="color: rgb(58, 233, 5);">{{ error.status_code or 500 }} Error</h1>
+        <p style="color: rgb(233, 7, 7);">Something went wrong</p>
+    </div>
+    
+    <div class="card p-5 text-center">
+        <h2>{{ error.description or "Internal Server Error" }}</h2>
+        <p>Sorry, we couldn't process your request.</p>
+        <a href="{{ url_for('dashboard') }}" class="btn btn-primary">Go to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+
+{% block title %}Buy Coins - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="buy-coins-page">
+    <div class="container">
+        <div class="buy-coins-card">
+            <h1>Buy Coins</h1>
+            <p>Support your favorite farmers with coins!</p>
+            
+            <form method="POST" class="purchase-form">
+                <div class="coin-packages">
+                    <label class="package-option">
+                        <input type="radio" name="amount" value="4.99">
+                        <span class="package-icon">💰</span>
+                        <span class="package-coins">50 coins</span>
+                        <span class="package-price">$4.99</span>
+                    </label>
+                    
+                    <label class="package-option">
+                        <input type="radio" name="amount" value="9.99" checked>
+                        <span class="package-icon">💰</span>
+                        <span class="package-coins">100 coins</span>
+                        <span class="package-price">$9.99</span>
+                    </label>
+                    
+                    <label class="package-option recommended">
+                        <input type="radio" name="amount" value="19.99">
+                        <span class="package-icon">💰</span>
+                        <span class="package-coins">200 coins</span>
+                        <span class="package-price">$19.99</span>
+                    </label>
+                    
+                    <label class="package-option">
+                        <input type="radio" name="amount" value="49.99">
+                        <span class="package-icon">💰</span>
+                        <span class="package-coins">500 coins</span>
+                        <span class="package-price">$49.99</span>
+                    </label>
+                </div>
+                
+                <div class="demo-notice">
+                    ⚠️ Demo Mode - No actual payment will be processed
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-lg">Purchase Coins</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.buy-coins-page { padding: 2rem 0; }
+.buy-coins-card { max-width: 700px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); text-align: center; }
+.buy-coins-card h1 { margin-bottom: 0.5rem; }
+.buy-coins-card > p { color: var(--text-secondary); margin-bottom: 2rem; }
+.coin-packages { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+.package-option { display: flex; flex-direction: column; align-items: center; padding: 1.5rem 1rem; border: 2px solid #ddd; border-radius: var(--radius-lg); cursor: pointer; transition: var(--transition); }
+.package-option:hover { border-color: var(--primary); transform: translateY(-3px); box-shadow: var(--shadow); }
+.package-option input { display: none; }
+.package-option.recommended { border-color: var(--accent); background: rgba(255, 215, 0, 0.1); }
+.package-icon { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.package-coins { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+.package-price { font-size: 0.9rem; color: var(--text-muted); }
+.demo-notice { background: var(--warning-light); color: #856404; padding: 1rem; border-radius: var(--radius); margin-bottom: 1.5rem; font-size: 0.9rem; }
+@media (max-width: 768px) { .coin-packages { grid-template-columns: repeat(2, 1fr); } }
+</style>
+{% endblock %}

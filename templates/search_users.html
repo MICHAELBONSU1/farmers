@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}Search Users - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header">
+        <h1>Search Farmers</h1>
+        <p>Find farmers to connect with</p>
+    </div>
+
+    <div class="card">
+        <form method="GET" class="search-form">
+            <div class="input-group">
+                <input type="text" name="q" value="{{ q or '' }}" placeholder="Search by username..." class="form-input">
+                <button type="submit" class="btn btn-primary">Search</button>
+            </div>
+        </form>
+
+        {% if users %}
+        <div class="users-list">
+            {% for user in users %}
+            <div class="user-card d-flex align-center gap-3 p-3 border-bottom">
+                <div class="profile-avatar">{{ user.full_name[0]|upper }}</div>
+                <div class="user-info flex-1">
+                    <h4>{{ user.full_name }}</h4>
+                    <p>@{{ user.username }} · {{ user.farm_type|title }} · {{ user.location or 'No location' }}</p>
+                </div>
+                <form method="POST" action="{{ url_for('add_friend', user_id=user.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Add Friend</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state text-center py-5">
+            <p>No users found. Try a different search term.</p>
+        </div>
+        {% endif %}
+
+        {% if users %}
+        <div class="users-list">
+            {% for user in users %}
+            <div class="user-card d-flex align-center gap-3 p-3 border-bottom">
+                <div class="profile-avatar">{{ user.full_name[0]|upper }}</div>
+                <div class="user-info flex-1">
+                    <h4>{{ user.full_name }}</h4>
+                    <p>@{{ user.username }} · {{ user.farm_type|title }} · {{ user.location or 'No location' }}</p>
+                </div>
+                <form method="POST" action="{{ url_for('add_friend', user_id=user.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-success">Add Friend</button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state text-center py-5">
+            <p>No users found. Try a different search term.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

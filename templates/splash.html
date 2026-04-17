@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Farmer-Hub - Loading</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            overflow: hidden;
+        }
+        
+        .splash-screen {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, rgba(26, 71, 42, 0.95) 0%, rgba(45, 90, 39, 0.95) 50%, rgba(74, 124, 67, 0.95) 100%),
+                        url('{{ url_for("static", filename="uploads/new/download.jpg") }}');
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .splash-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(26, 71, 42, 0.9) 0%, rgba(45, 90, 39, 0.85) 100%);
+        }
+        
+        .splash-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+        }
+        
+        .splash-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255, 215, 0, 0.12) 0%, transparent 40%),
+                radial-gradient(circle at 80% 20%, rgba(255, 215, 0, 0.08) 0%, transparent 40%),
+                radial-gradient(circle at 40% 40%, rgba(139, 69, 19, 0.08) 0%, transparent 30%);
+            animation: bgFloat 20s ease-in-out infinite;
+        }
+        
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(2%, 2%) rotate(1deg); }
+            66% { transform: translate(-1%, 1%) rotate(-1deg); }
+        }
+        
+        .splash-floating {
+            position: absolute;
+            font-size: 2.5rem;
+            opacity: 0.15;
+            animation: floatAround 15s ease-in-out infinite;
+        }
+        
+        .splash-floating:nth-child(1) { top: 8%; left: 8%; animation-delay: 0s; }
+        .splash-floating:nth-child(2) { top: 15%; right: 12%; animation-delay: 2s; }
+        .splash-floating:nth-child(3) { bottom: 18%; left: 12%; animation-delay: 4s; }
+        .splash-floating:nth-child(4) { bottom: 12%; right: 8%; animation-delay: 6s; }
+        .splash-floating:nth-child(5) { top: 45%; left: 3%; animation-delay: 8s; }
+        .splash-floating:nth-child(6) { top: 25%; right: 25%; animation-delay: 3s; }
+        .splash-floating:nth-child(7) { bottom: 35%; right: 5%; animation-delay: 5s; }
+        
+        @keyframes floatAround {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-25px) rotate(8deg); }
+            50% { transform: translateY(0) rotate(0deg); }
+            75% { transform: translateY(25px) rotate(-8deg); }
+        }
+        
+        .splash-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .splash-logo {
+            width: 160px;
+            height: 160px;
+            background: linear-gradient(145deg, #FFD700 0%, #FFA500 50%, #FF8C00 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 5.5rem;
+            box-shadow: 
+                0 0 80px rgba(255, 215, 0, 0.6),
+                0 0 120px rgba(255, 165, 0, 0.4),
+                0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: logoPulse 2.5s ease-in-out infinite;
+        }
+        
+        @keyframes logoPulse {
+            0%, 100% { 
+                transform: scale(1);
+                box-shadow: 
+                    0 0 80px rgba(255, 215, 0, 0.6),
+                    0 0 120px rgba(255, 165, 0, 0.4),
+                    0 20px 60px rgba(0, 0, 0, 0.3);
+            }
+            50% { 
+                transform: scale(1.08);
+                box-shadow: 
+                    0 0 100px rgba(255, 215, 0, 0.8),
+                    0 0 150px rgba(255, 165, 0, 0.5),
+                    0 25px 70px rgba(0, 0, 0, 0.35);
+            }
+        }
+        
+        .splash-logo::before,
+        .splash-logo::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            border: 2px solid rgba(255, 215, 0, 0.4);
+        }
+        
+        .splash-logo::before {
+            width: 190px;
+            height: 190px;
+            animation: ringExpand 2.5s ease-out infinite;
+        }
+        
+        .splash-logo::after {
+            width: 220px;
+            height: 220px;
+            animation: ringExpand 2.5s ease-out 0.8s infinite;
+        }
+        
+        @keyframes ringExpand {
+            0% { transform: scale(1); opacity: 0.5; }
+            100% { transform: scale(1.6); opacity: 0; }
+        }
+        
+        .splash-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 4rem;
+            font-weight: 700;
+            color: white;
+            margin-top: 2.5rem;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease-out 0.4s both;
+        }
+        
+        .splash-subtitle {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 0.75rem;
+            animation: fadeInUp 1s ease-out 0.7s both;
+            font-weight: 300;
+        }
+        
+        .splash-tagline {
+            font-size: 1.1rem;
+            color: rgba(255, 215, 0, 0.9);
+            margin-top: 1.5rem;
+            animation: fadeInUp 1s ease-out 1s both;
+            font-style: italic;
+        }
+        
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(35px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .splash-loader {
+            width: 240px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 3px;
+            margin-top: 3rem;
+            overflow: hidden;
+            animation: fadeIn 1s ease-out 1.2s both;
+        }
+        
+        .splash-loader-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #FFD700, #FFA500, #FFD700);
+            background-size: 200% 100%;
+            border-radius: 3px;
+            animation: loading 3s ease-in-out forwards;
+        }
+        
+        @keyframes loading {
+            0% { width: 0%; }
+            30% { width: 60%; }
+            70% { width: 85%; }
+            100% { width: 100%; }
+        }
+        
+        .splash-loading-text {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+            margin-top: 1rem;
+            animation: fadeIn 1s ease-out 1.5s both;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .splash-skip {
+            position: absolute;
+            bottom: 2.5rem;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            animation: fadeIn 1s ease-out 2s both;
+            z-index: 100;
+            padding: 0.75rem 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .splash-skip:hover {
+            color: white;
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .splash-title { font-size: 2.8rem; }
+            .splash-subtitle { font-size: 1.1rem; }
+            .splash-logo { width: 130px; height: 130px; font-size: 4.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="splash-screen">
+        <div class="splash-overlay"></div>
+        
+        <div class="splash-bg">
+            <div class="splash-floating">🌾</div>
+            <div class="splash-floating">🌽</div>
+            <div class="splash-floating">🥕</div>
+            <div class="splash-floating">🚜</div>
+            <div class="splash-floating">🌻</div>
+            <div class="splash-floating">🍎</div>
+            <div class="splash-floating">🐄</div>
+        </div>
+        
+        <div class="splash-content">
+            <div class="splash-logo">🌱</div>
+            <h1 class="splash-title">Farmer-Hub</h1>
+            <p class="splash-subtitle">Connecting Farmers Worldwide</p>
+            <p class="splash-tagline">"Growing Together, Succeeding Together"</p>
+            
+            <div class="splash-loader">
+                <div class="splash-loader-bar"></div>
+            </div>
+            <p class="splash-loading-text">Loading your farming community...</p>
+        </div>
+        
+        <div class="splash-skip" onclick="window.location.href='/login'">Skip →</div>
+    </div>
+    
+    <script>
+        setTimeout(function() {
+            var splash = document.querySelector('.splash-screen');
+            if (splash) {
+                splash.style.transition = 'opacity 0.6s ease';
+                splash.style.opacity = '0';
+                setTimeout(function() { window.location.href = '/login'; }, 600);
+            }
+        }, 4000);
+    </script>
+</body>
+</html>

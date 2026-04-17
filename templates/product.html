@@ -1,0 +1,67 @@
+{% extends "layout.html" %}
+
+{% block title %}{{ product.title }} - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="grid grid-2">
+        <div>
+            <div class="card">
+                <div class="card-image" style="height: 400px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                    <span style="font-size: 8rem;">
+                        {% if product.category == 'seeds' %}🌱{% else %}🐄{% endif %}
+                    </span>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="card">
+                <div class="card-body">
+                    <span class="category-tab" style="display: inline-block; margin-bottom: 1rem; color: #1A1A1A;">{{ product.category|title }}</span>
+                    <h1 style="color: #1A1A1A;">{{ product.title }}</h1>
+                    <div class="card-price" style="font-size: 2rem; margin: 1rem 0;">${{ product.price }} <small>per {{ product.unit }}</small></div>
+                    
+                    <p style="color: #1A1A1A;"><strong>Seller:</strong> <a href="#" style="color: #1A1A1A;">{{ product.seller.username }}</a></p>
+                    <p style="color: #1A1A1A;"><strong>Location:</strong> {{ product.seller.location or 'Not specified' }}</p>
+                    <p style="color: #1A1A1A;"><strong>Quantity Available:</strong> {{ product.quantity }}</p>
+                    <p style="color: #1A1A1A;"><strong>Posted:</strong> {{ product.created_at.strftime('%Y-%m-%d') }}</p>
+                    
+                    <hr style="margin: 1.5rem 0;">
+                    
+                    <h3 style="color: #1A1A1A;">Description</h3>
+                    <p style="color: #4A4A4A;">{{ product.description }}</p>
+                    
+                    {% if current_user.id != product.seller_id %}
+                    <div class="mt-4">
+                        <button class="btn btn-primary btn-lg w-100" data-toggle="modal" data-target="#offerModal">Make an Offer</button>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% if current_user.id != product.seller_id %}
+    <div class="modal" id="offerModal">
+        <div class="modal-overlay"></div>
+        <div class="modal-content" style="max-width: 500px; margin: 2rem auto; background: white; padding: 2rem; border-radius: 8px;">
+            <h2 style="color: #1A1A1A;">Make an Offer</h2>
+            <form method="POST" action="{{ url_for('make_offer', product_id=product.id) }}">
+                <div class="form-group">
+                    <label class="form-label" for="offer_price" style="color: #1A1A1A;">Your Offer ($)</label>
+                    <input type="number" class="form-input" id="offer_price" name="offer_price" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="message" style="color: #1A1A1A;">Message to Seller</label>
+                    <textarea class="form-textarea" id="message" name="message" rows="4" placeholder="Introduce yourself and explain your offer..."></textarea>
+                </div>
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">Send Offer</button>
+                    <button type="button" class="btn btn-outline" onclick="document.getElementById('offerModal').style.display='none'">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

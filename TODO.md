@@ -1,0 +1,1 @@
+# Fix Dashboard Background Image\n\n- [ ] 1. Create TODO.md ✅\n- [ ] 2. Edit templates/dashboard.html to replace missing image\n- [ ] 3. Update TODO.md with progress\n- [ ] 4. Test dashboard background\n- [ ] 5. Complete task

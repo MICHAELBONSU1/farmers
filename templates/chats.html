@@ -1,0 +1,102 @@
+{% extends "layout.html" %}
+
+{% block title %}Chats - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container" style="max-width: 1400px;">
+    <div class="dashboard-header" style="background: linear-gradient(135deg, var(--secondary), var(--secondary-light)); margin-bottom: 2rem;">
+        <h1 style="color: rgb(5, 5, 5);">Chats</h1>
+        <p style="color: rgb(12, 12, 12);">Connect with your farmer friends</p>
+    </div>
+
+    <div class="chat-container d-flex gap-3" style="height: 70vh;">
+        <!-- Left Sidebar - Friends List -->
+        <div class="chat-sidebar card" style="width: 350px; height: 100%; overflow-y: auto;">
+            <div class="card-body p-0">
+                <!-- Search Friends -->
+                <div class="p-3 border-bottom">
+                    <form method="GET" action="{{ url_for('search_users') }}" style="display: flex; gap: 0.5rem;">
+                        <input type="text" name="q" placeholder="Search friends..." class="form-input flex-1" style="border-radius: var(--radius);">
+                        <button type="submit" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Search</button>
+                    </form>
+                </div>
+
+                <!-- Friend Requests -->
+                <div class="p-3 border-bottom">
+                    <h4 style="margin: 0 0 1rem;">Friend Requests ({{ requests|length }})</h4>
+{% if requests %}
+  {% for req in requests %}
+                    <div class="d-flex align-center gap-2 p-2 mb-2" style="background: rgba(45,90,39,0.05); border-radius: var(--radius);">
+{{ req.sender.full_name[0]|upper }}
+                        <div class="flex-1">
+{{ req.sender.full_name }}
+@{{ req.sender.username }}
+                        </div>
+                        <form method="POST" action="{{ url_for('accept_friend_request', request_id=req.id) }}" style="display: inline;">
+                            <button type="submit" class="btn btn-success btn-sm">Accept</button>
+                        </form>
+                    </div>
+{% endfor %}
+  {% endif %}
+                </div>
+
+                <!-- Friends List -->
+                <div class="friends-list">
+                    <h4 class="p-3 border-bottom" style="margin: 0;">Friends ({{ friends|length }})</h4>
+{% if friends %}
+  {% for friend in friends %}
+                    <a href="{{ url_for('chat', friend_id=friend.id) }}" class="friend-item d-flex align-center gap-2 p-3 border-bottom hover-effect">
+                        <div class="profile-avatar online" style="width: 50px; height: 50px; position: relative;">
+                            {{ friend.full_name[0]|upper }}
+                            <div class="online-dot" style="position: absolute; bottom: 2px; right: 2px; width: 12px; height: 12px; border-radius: 50%; background: #28a745; border: 2px solid white;"></div>
+                        </div>
+                        <div class="flex-1">
+                            <strong style="color: #1A1A1A;">{{ friend.full_name }}</strong>
+                            <small style="color: #4A4A4A;">@{{ friend.username }}</small>
+                        </div>
+                    </a>
+{% endfor %}
+  {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Chat Area (Default / No chat selected) -->
+        <div class="chat-main flex-1 card d-flex flex-column" style="display: none;">
+            <div class="chat-header p-3 border-bottom bg-light">
+                <h3>Select a friend to start chatting</h3>
+            </div>
+            <div class="chat-messages flex-1 p-4 overflow-auto" style="background: #f8f9fa;">
+                <div class="text-center text-muted py-5">
+                    <p>👋 Choose a friend from the left sidebar to start a conversation</p>
+                </div>
+            </div>
+            <div class="chat-input p-3 border-top">
+                <form class="d-flex gap-2">
+                    <input type="text" placeholder="Type a message..." class="form-input flex-1" disabled>
+                    <button class="btn btn-primary" disabled>Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.chat-container { height: 70vh; }
+.chat-sidebar { border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); }
+.friend-item { text-decoration: none; display: block; transition: var(--transition); }
+.friend-item:hover { background: rgba(45,90,39,0.05); }
+.online-dot { box-shadow: 0 0 0 2px white; }
+.hover-effect:hover { transform: translateX(5px); }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Auto-load first friend's chat if exists
+    const friends = document.querySelectorAll('.friend-item');
+    if (friends.length > 0) {
+        friends[0].click(); // Load first chat
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block title %}Create Post - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="create-post-page">
+    <div class="container">
+        <div class="create-post-card">
+            <h1>Create New Post</h1>
+            <p>Share your farm journey with the community</p>
+            
+            <form method="POST" enctype="multipart/form-data" class="post-form">
+                <div class="form-group">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title" class="form-input" placeholder="What's your post about?" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Description</label>
+                    <textarea name="description" class="form-textarea" placeholder="Tell us more about your post..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Media (Image or Video)</label>
+                    <div class="file-upload">
+                        <input type="file" name="media" accept="image/*,video/*" id="media-upload">
+                        <label for="media-upload" class="file-upload-label">
+                            <span class="upload-icon">📁</span>
+                            <span>Click to upload image or video</span>
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <a href="{{ url_for('feed') }}" class="btn btn-outline">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Post</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+.create-post-page { padding: 2rem 0; }
+.create-post-card { max-width: 600px; margin: 0 auto; background: #E8F5E9; padding: 2rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-lg); }
+.create-post-card h1 { text-align: center; margin-bottom: 0.5rem; }
+.create-post-card > p { text-align: center; color: var(--text-secondary); margin-bottom: 2rem; }
+.post-form .form-group { margin-bottom: 1.5rem; }
+.file-upload input[type="file"] { display: none; }
+.file-upload-label { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; border: 2px dashed var(--primary); border-radius: var(--radius); cursor: pointer; transition: var(--transition); }
+.file-upload-label:hover { background: var(--bg-light); border-color: var(--primary-light); }
+.upload-icon { font-size: 3rem; margin-bottom: 0.5rem; }
+.form-actions { display: flex; gap: 1rem; justify-content: flex-end; margin-top: 2rem; }
+</style>
+{% endblock %}

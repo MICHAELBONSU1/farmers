@@ -1,0 +1,108 @@
+{% extends "layout.html" %}
+
+{% block title %}Manage Offers - Farmer-Hub Admin{% endblock %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <div class="d-flex justify-between align-center mb-4">
+        <div>
+            <h1 style="color: #1A1A1A;">Manage Offers</h1>
+            <p class="text-secondary" style="color: #4A4A4A;">View and manage all bargaining offers</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline">Back to Dashboard</a>
+    </div>
+    
+    <!-- Filters -->
+    <div class="marketplace-filters mb-4">
+        <form method="GET" class="filter-group">
+            <select name="status" class="form-select" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="pending">Pending</option>
+                <option value="accepted">Accepted</option>
+                <option value="rejected">Rejected</option>
+                <option value="counter">Counter Offer</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
+    
+    <!-- Offers Table -->
+    <div class="card">
+        <div class="card-body" style="color: #1A1A1A;">
+            <table class="table">
+                <thead>
+                    <tr style="color: #1A1A1A;">
+                        <th>ID</th>
+                        <th>Product</th>
+                        <th>Buyer</th>
+                        <th>Seller</th>
+                        <th>Offer Price</th>
+                        <th>Status</th>
+                        <th>Message</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody style="color: #1A1A1A;">
+                    {% for offer in offers %}
+                    <tr style="color: #1A1A1A;">
+                        <td>{{ offer.id }}</td>
+                        <td>{{ offer.product.title }}</td>
+                        <td>{{ offer.buyer.username }}</td>
+                        <td>{{ offer.seller.username }}</td>
+                        <td>${{ offer.offer_price }}</td>
+                        <td>
+                            {% if offer.status == 'pending' %}
+                            <span class="unsolved-badge">Pending</span>
+                            {% elif offer.status == 'accepted' %}
+                            <span class="solved-badge">Accepted</span>
+                            {% elif offer.status == 'rejected' %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% elif offer.status == 'counter' %}
+                            <span class="badge bg-info">Counter</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ offer.message or 'N/A' }}</td>
+                        <td>{{ offer.created_at.strftime('%Y-%m-%d') }}</td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center">No offers found</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+.table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.table th, .table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    color: #1A1A1A;
+}
+.table th {
+    background: #f8f9fa;
+    font-weight: 600;
+}
+.badge {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+}
+.bg-danger {
+    background: #dc3545;
+    color: white;
+}
+.bg-info {
+    background: #17a2b8;
+    color: white;
+}
+</style>
+{% endblock %}

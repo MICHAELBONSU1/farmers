@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Farmer-Hub{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Source+Sans+Pro:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Extra styles can be added here */
+    </style>
+</head>
+<body>
+    {% if current_user.is_authenticated %}
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="{{ url_for('dashboard') }}" class="navbar-brand">
+                Farmer-Hub
+            </a>
+            
+            <!-- Navigation Dashboard -->
+            <div class="navbar-dashboard">
+                <ul class="navbar-menu">
+                    <li><a href="{{ url_for('dashboard') }}" title="Dashboard"><span class="nav-text">Home</span></a></li>
+                    <li><a href="{{ url_for('feed') }}" title="Feed"><span class="nav-text">Feed</span></a></li>
+                    <li><a href="{{ url_for('create_post') }}" title="Create Post"><span class="nav-text">Create Post</span></a></li>
+                    <li><a href="{{ url_for('marketplace') }}" title="Marketplace"><span class="nav-text">Marketplace</span></a></li>
+                    <li><a href="{{ url_for('forum') }}" title="Forum"><span class="nav-text">Forum</span></a></li>
+                    <li><a href="{{ url_for('chats') }}" title="Chats"><span class="nav-text">Chats</span></a></li>
+                    <li><a href="{{ url_for('messages') }}" title="Messages"><span class="nav-text">Messages</span></a></li>
+                    <li><a href="{{ url_for('wallet') }}" title="Wallet"><span class="nav-text">Wallet</span></a></li>
+                    {% if current_user.is_admin %}
+                    <li><a href="{{ url_for('admin_dashboard') }}" title="Admin" class="admin-link"><span class="nav-text">Admin</span></a></li>
+                    {% endif %}
+                </ul>
+            </div>
+            
+            <div class="navbar-actions">
+                <!-- Language Selector -->
+                <div class="language-selector">
+                    <select onchange="window.location.href='?lang='+this.value" style="padding: 0.5rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.1); color: white;">
+                        <option value="en" {% if session.get('lang')=='en' or not session.get('lang') %}selected{% endif %}>🌐 English</option>
+                        <option value="es" {% if session.get('lang')=='es' %}selected{% endif %}>🌐 Español</option>
+                        <option value="fr" {% if session.get('lang')=='fr' %}selected{% endif %}>🌐 Français</option>
+                        <option value="de" {% if session.get('lang')=='de' %}selected{% endif %}>🌐 Deutsch</option>
+                        <option value="zh" {% if session.get('lang')=='zh' %}selected{% endif %}>🌐 中文</option>
+                        <option value="hi" {% if session.get('lang')=='hi' %}selected{% endif %}>🌐 हिन्दी</option>
+                        <option value="ar" {% if session.get('lang')=='ar' %}selected{% endif %}>🌐 العربية</option>
+                        <option value="pt" {% if session.get('lang')=='pt' %}selected{% endif %}>🌐 Português</option>
+                    </select>
+                </div>
+                
+                <div class="user-dropdown">
+                    <div class="user-avatar">
+                        {{ current_user.full_name[0]|upper }}
+                    </div>
+                    <div class="dropdown-menu">
+                        <a href="{{ url_for('profile') }}">Profile</a>
+                        <a href="{{ url_for('edit_profile') }}">Settings</a>
+                        <a href="{{ url_for('logout') }}">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+    {% endif %}
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <!-- Footer -->
+    {% if current_user.is_authenticated %}
+    <footer class="footer" style="background: linear-gradient(135deg, #1E3D1A 0%, #152d15 100%); color: white; padding: 4rem 0 2rem;">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section" style="color: white;">
+                    <h4 style="color: white;">Contact</h4>
+                    <ul style="color: rgba(255,255,255,0.85);">
+                        <li><strong style="color: #FFD700;">Name:</strong> Michael Bonsu</li>
+                        <li><strong style="color: #FFD700;">Phone:</strong> +233546820778</li>
+                        <li><strong style="color: #FFD700;">Email:</strong> bonsum114@gmail.com</li>
+                        <li><strong style="color: #FFD700;">WhatsApp:</strong> +233546820778</li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="{{ url_for('forum') }}">Forum</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Events</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">FAQ</a></li>
+                        <li><a href="#">Report Issue</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Legal</h4>
+                    <ul>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Cookie Policy</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 Farmer-Hub. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+    {% endif %}
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

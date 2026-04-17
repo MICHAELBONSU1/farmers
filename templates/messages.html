@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Messages - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="dashboard-header">
+        <h1 style="color: rgb(8, 8, 8);">Messages</h1>
+        <p style="color: rgb(13, 14, 13);">Your conversations with other farmers</p>
+    </div>
+
+    <div class="grid grid-2">
+        <div class="card">
+            <div class="card-body">
+                <h3 style="color: #1A1A1A;">Received Messages</h3>
+                {% if received %}
+                <div class="message-list">
+                    {% for message in received %}
+                    <div class="message-item {% if not message.read %}unread{% endif %}">
+                        <div class="message-avatar">{{ message.sender.full_name[0] if message.sender.full_name else 'U' }}</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-sender" style="color: #f1e9e9;">{{ message.sender.full_name }}</span>
+                                <span class="message-time">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                            </div>
+                            <p class="message-preview" style="color: #f7efef;">{{ message.content[:100] }}...</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center" style="padding: 2rem; color: #fdf8f8;">No received messages yet.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-body">
+                <h3 style="color: #080808;">Sent Messages</h3>
+                {% if sent %}
+                <div class="message-list">
+                    {% for message in sent %}
+                    <div class="message-item">
+                        <div class="message-avatar">{{ message.receiver.full_name[0] if message.receiver.full_name else 'U' }}</div>
+                        <div class="message-content">
+                            <div class="message-header">
+                                <span class="message-sender" style="color: #eceaea;">To: {{ message.receiver.full_name }}</span>
+                                <span class="message-time">{{ message.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
+                            </div>
+                            <p class="message-preview" style="color: #f1ecec;">{{ message.content[:100] }}...</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-center" style="padding: 2rem; color: #050505;">No sent messages yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

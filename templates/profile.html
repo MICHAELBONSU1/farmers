@@ -1,0 +1,112 @@
+{% extends "layout.html" %}
+
+{% block title %}Profile - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="profile-header">
+    <div class="container">
+        <div class="profile-info">
+            <div class="profile-avatar">
+                {% if user.avatar and user.avatar != 'default-avatar.png' %}
+                <img src="{{ url_for('static', filename=user.avatar) }}" alt="{{ user.full_name }}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
+                {% else %}
+                {{ user.full_name[0] if user.full_name else 'U' }}
+                {% endif %}
+            </div>
+            <div class="profile-details">
+                <h1 style="color: white;">{{ user.full_name }}</h1>
+                <p style="color: white;">@{{ user.username }} • {{ user.location or 'Location not set' }}</p>
+                <p style="color: white;">Farm Type: {{ user.farm_type|title if user.farm_type else 'Not specified' }}</p>
+            </div>
+            <a href="{{ url_for('edit_profile') }}" class="btn btn-white" style="margin-left: auto;">Edit Profile</a>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="profile-tabs">
+        <a href="#products" class="profile-tab active">My Products</a>
+        <a href="#questions" class="profile-tab">Questions Asked</a>
+    </div>
+
+    <div id="products">
+        <h2 class="mb-3" style="color: #1A1A1A;">My Products</h2>
+        {% if products %}
+        <div class="grid grid-3">
+            {% for product in products %}
+            <div class="card">
+                {% if product.image_url %}
+                <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.title }}" style="width: 100%; height: 200px; object-fit: cover;">
+                {% else %}
+                <div class="card-image" style="display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);">
+                    <span style="font-size: 4rem;">
+                        {% if product.category == 'seeds' %}🌱{% else %}🐄{% endif %}
+                    </span>
+                </div>
+                {% endif %}
+                <div class="card-body">
+                    <h4 class="card-title" style="color: #1A1A1A;">{{ product.title }}</h4>
+                    <div class="card-price">${{ product.price }}</div>
+                    <div class="card-meta">
+                        <span class="badge" style="background: var(--primary); color: white; padding: 2px 8px; border-radius: 4px;">{{ product.status }}</span>
+                    </div>
+                    <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-outline mt-2 w-100">View</a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center">
+                <p style="color: #4A4A4A;">You haven't listed any products yet.</p>
+                <a href="{{ url_for('create_product') }}" class="btn btn-primary">List Your First Product</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    <div id="questions" style="display: none;">
+        <h2 class="mb-3" style="color: #1A1A1A;">Questions I've Asked</h2>
+        {% if questions %}
+        <div class="forum-list">
+            {% for question in questions %}
+            <div class="forum-item">
+                <div class="forum-item-header">
+                    <a href="{{ url_for('question_detail', question_id=question.id) }}" class="forum-item-title" style="color: #1A1A1A;">{{ question.title }}</a>
+                    {% if question.solved %}
+                    <span class="solved-badge">Solved</span>
+                    {% else %}
+                    <span class="unsolved-badge">Pending</span>
+                    {% endif %}
+                </div>
+                <div class="forum-item-meta" style="color: #4A4A4A;">
+                    <span style="color: #4A4A4A;">💬 {{ question.answers|length }} answers</span>
+                    <span style="color: #4A4A4A;">📅 {{ question.created_at.strftime('%Y-%m-%d') }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="card">
+            <div class="card-body text-center">
+                <p style="color: #4A4A4A;">You haven't asked any questions yet.</p>
+                <a href="{{ url_for('create_question') }}" class="btn btn-primary">Ask Your First Question</a>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.querySelectorAll('.profile-tab').forEach(function(tab) {
+    tab.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelectorAll('.profile-tab').forEach(function(t) { t.classList.remove('active'); });
+        this.classList.add('active');
+        document.getElementById('products').style.display = 'none';
+        document.getElementById('questions').style.display = 'none';
+        document.querySelector(this.getAttribute('href')).style.display = 'block';
+    });
+});
+</script>
+{% endblock %}

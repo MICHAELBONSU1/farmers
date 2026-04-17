@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Community Forum - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="d-flex justify-between align-center mt-4 mb-4">
+        <h1 style="color: #124e03;">Community Forum</h1>
+        <a href="{{ url_for('create_question') }}" class="btn btn-primary">Ask a Question</a>
+    </div>
+
+    <div class="marketplace-filters">
+        <form method="GET" action="{{ url_for('forum') }}" class="filter-group">
+            <div class="search-box">
+                <input type="text" name="search" placeholder="Search questions..." value="{{ request.args.get('search', '') }}">
+            </div>
+            <select name="category" class="form-select" style="width: auto;">
+                <option value="">All Categories</option>
+                <option value="crop_farming" {% if request.args.get('category') == 'crop_farming' %}selected{% endif %}>Crop Farming</option>
+                <option value="animal_husbandry" {% if request.args.get('category') == 'animal_husbandry' %}selected{% endif %}>Animal Husbandry</option>
+                <option value="equipment" {% if request.args.get('category') == 'equipment' %}selected{% endif %}>Equipment</option>
+                <option value="weather" {% if request.args.get('category') == 'weather' %}selected{% endif %}>Weather</option>
+                <option value="market" {% if request.args.get('category') == 'market' %}selected{% endif %}>Market Prices</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    {% if questions %}
+    <div class="forum-list">
+        {% for question in questions %}
+        <div class="forum-item">
+            <div class="forum-item-header">
+                <a href="{{ url_for('question_detail', question_id=question.id) }}" class="forum-item-title" style="color: #1A1A1A;">{{ question.title }}</a>
+                {% if question.solved %}
+                <span class="solved-badge">Solved</span>
+                {% else %}
+                <span class="unsolved-badge">Pending</span>
+                {% endif %}
+            </div>
+            <p class="card-text" style="color: #f8f3f3;">{{ question.description[:150] }}...</p>
+            <div class="forum-item-meta" style="color: #f7f3f3;">
+                <span style="color: #faf8f8;">👤 {{ question.author.username }}</span>
+                <span style="color: #faf8f8;">📅 {{ question.created_at.strftime('%Y-%m-%d') }}</span>
+                <span style="color: #f8f7f7;">💬 {{ question.answers|length }} answers</span>
+                {% if question.category %}
+                <span style="color: #f5f3f3;">🏷️ {{ question.category|title }}</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="card">
+        <div class="card-body text-center">
+            <p style="font-size: 1.25rem; color: #4A4A4A;">No questions found.</p>
+            <a href="{{ url_for('create_question') }}" class="btn btn-primary mt-2">Be the first to ask a question!</a>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

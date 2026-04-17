@@ -1,0 +1,224 @@
+{% extends "layout.html" %}
+
+{% block title %}Nexus | Dashboard{% endblock %}
+
+{% block content %}
+<div class="nexus-wrapper">
+    <section class="nexus-hero" style="background-image: url('{{ url_for('static', filename='uploads/new/back.jpg') }}');">
+        <div class="hero-overlay"></div>
+        <div class="container hero-container">
+            <div class="hero-text">
+                <div class="status-pill">System Online: All Sectors Nominal</div>
+                <h1>Operational Overview</h1>
+                <p>Welcome, <strong>{{ current_user.full_name }}</strong>. Market liquidity is up 12% this morning.</p>
+            </div>
+            <div class="hero-stats">
+                <div class="quick-stat">
+                    <span class="qs-val">{{ stats.products_listed }}</span>
+                    <span class="qs-label">Assets</span>
+                </div>
+                <div class="quick-stat">
+                    <span class="qs-val">{{ stats.pending_offers }}</span>
+                    <span class="qs-label">Offers</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="container content-shift">
+        <div class="nexus-grid">
+            
+            <div class="nexus-main">
+                <div class="glass-section">
+                    <div class="section-title">
+                        <h2>Quick Actions</h2>
+                        <div class="g-line"></div>
+                    </div>
+                    <div class="action-tiles">
+                        <a href="{{ url_for('create_product') }}" class="tile">
+                            <div class="tile-icon"></div>
+                            <div class="tile-label">Deploy Listing</div>
+                        </a>
+                        <a href="{{ url_for('marketplace') }}" class="tile">
+                            <div class="tile-icon"></div>
+                            <div class="tile-label">Market Intel</div>
+                        </a>
+                        <a href="{{ url_for('create_question') }}" class="tile">
+                            <div class="tile-icon"></div>
+                            <div class="tile-label">Consult Network</div>
+                        </a>
+                        <a href="{{ url_for('forum') }}" class="tile">
+                            <div class="tile-icon"></div>
+                            <div class="tile-label">Community</div>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="glass-section mt-4">
+                    <div class="section-title">
+                        <h2>Active Inventory</h2>
+                        <a href="{{ url_for('marketplace') }}" class="btn-text">View Global Market →</a>
+                    </div>
+                    <div class="visual-stack">
+                        {% for product in products[:3] %}
+                        <div class="v-item">
+                            <div class="v-img" style="background-image: url('{{ url_for('static', filename=product.image_url) if product.image_url else 'uploads/new/download (1).jpg' }}');"></div>
+                            <div class="v-content">
+                                <h3>{{ product.title }}</h3>
+                                <p>${{ product.price }} | <span class="tag-{{ product.status }}">{{ product.status }}</span></p>
+                            </div>
+                            <div class="v-arrow">→</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="nexus-sidebar">
+                <div class="policy-card">
+                    <div class="policy-image" style="background-image: url('{{ url_for('static', filename='uploads/new/Trump Announces New $16 Billion Aid Package for Farmers - Modern Farmer.jpg') }}');">
+                        <div class="policy-badge">Policy Alert</div>
+                    </div>
+                    <div class="policy-content">
+                        <span class="news-tag">FINANCIAL</span>
+                        <h4>$16 Billion Aid Package</h4>
+                        <p>Federal support allocated for agricultural sustainability. Check your eligibility now.</p>
+                        <a href="#" class="policy-btn">Analyze Impact</a>
+                    </div>
+                </div>
+
+                <div class="news-card mt-4" style="background-image: url('{{ url_for('static', filename='uploads/new/NEWS.jpg') }}');">
+                    <div class="news-overlay"></div>
+                    <div class="news-content">
+                        <span class="news-tag">BREAKING</span>
+                        <h4>Market Volatility Notice</h4>
+                        <p>Grain prices are trending upward. Adjust your listing prices.</p>
+                    </div>
+                </div>
+
+                <div class="tip-card mt-4">
+                    <div class="tip-img" style="background-image: url('{{ url_for('static', filename='uploads/new/No water, no food! 🌍💧 Efficient irrigation ensures crops get just the right amount of water—boosting yields while conserving resources__🌱 Drip irrigation saves up to 60% more water than traditional methods!_💬 .jpg') }}');"></div>
+                    <div class="tip-body">
+                        <h3>Irrigation Efficiency</h3>
+                        <p>Drip irrigation saves up to 60% more water. Learn implementation.</p>
+                        <a href="#" class="btn-outline-white">Read Guide</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* CSS VARIABLES */
+:root {
+    --nexus-green: #4ade80;
+    --nexus-dark: #123f12;
+    --nexus-glass: rgba(15, 20, 30, 0.7);
+    --nexus-border: rgba(255, 255, 255, 0.08);
+    --nexus-red: #ef4444;
+}
+
+body { background: var(--nexus-dark); color: #f8fafc; font-family: 'Outfit', sans-serif; overflow-x: hidden; }
+
+/* HERO SECTION */
+.nexus-hero {
+    height: 500px;
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+.hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to bottom, rgba(5,7,10,0.2), var(--nexus-dark));
+}
+.hero-container { position: relative; z-index: 5; display: flex; justify-content: space-between; align-items: flex-end; width: 100%; }
+.hero-text h1 { font-size: 3.5rem; font-weight: 800; letter-spacing: -2px; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.status-pill { background: rgba(74, 222, 128, 0.15); color: var(--nexus-green); padding: 6px 16px; border-radius: 50px; border: 1px solid var(--nexus-green); font-size: 0.75rem; display: inline-block; margin-bottom: 1rem; text-transform: uppercase; }
+
+.quick-stat { text-align: right; margin-left: 2rem; }
+.qs-val { display: block; font-size: 2.5rem; font-weight: 800; color: var(--nexus-green); line-height: 1; }
+.qs-label { font-size: 0.8rem; text-transform: uppercase; color: #94a3b8; }
+
+/* LAYOUT SHIFT */
+.content-shift { margin-top: -80px; position: relative; z-index: 10; }
+.nexus-grid { display: grid; grid-template-columns: 1.8fr 1fr; gap: 2rem; }
+
+/* POLICY CARD */
+.policy-card { background: var(--nexus-glass); border-radius: 24px; overflow: hidden; border: 1px solid var(--nexus-border); backdrop-filter: blur(20px); }
+.policy-image { height: 160px; background-size: cover; background-position: center; position: relative; }
+.policy-badge { position: absolute; top: 15px; right: 15px; background: var(--nexus-red); color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
+.policy-content { padding: 1.5rem; }
+.policy-content h4 { font-size: 1.25rem; margin: 0.5rem 0; color: white; }
+.policy-content p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem; line-height: 1.4; }
+.policy-btn { display: block; background: var(--nexus-green); color: black; text-align: center; padding: 10px; border-radius: 12px; text-decoration: none; font-weight: 700; font-size: 0.85rem; }
+
+/* GLASSMORPHISM SECTIONS */
+.glass-section {
+    background: var(--nexus-glass);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--nexus-border);
+    border-radius: 24px;
+    padding: 2rem;
+}
+.section-title { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+.section-title h2 { font-size: 1.25rem; font-weight: 700; color: #fff; }
+
+/* ACTION TILES */
+.action-tiles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+.tile { 
+    background: rgba(255,255,255,0.03); 
+    border: 1px solid var(--nexus-border); 
+    border-radius: 16px; 
+    padding: 1.5rem 1rem; 
+    text-align: center; 
+    text-decoration: none; 
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tile:hover { background: var(--nexus-green); transform: translateY(-5px); }
+.tile:hover .tile-label, .tile:hover .tile-icon { color: #000; }
+.tile-icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+.tile-label { font-size: 0.8rem; color: #94a3b8; font-weight: 600; }
+
+/* VISUAL STACK */
+.v-item { 
+    display: flex; align-items: center; gap: 1.5rem; 
+    padding: 1rem; border-radius: 16px; 
+    transition: 0.2s; cursor: pointer;
+    border-bottom: 1px solid var(--nexus-border);
+}
+.v-item:hover { background: rgba(255,255,255,0.05); }
+.v-img { width: 80px; height: 60px; border-radius: 10px; background-size: cover; background-position: center; }
+.v-content h3 { font-size: 1rem; margin: 0; }
+.v-content p { font-size: 0.85rem; color: #64748b; margin: 4px 0 0 0; }
+.v-arrow { margin-left: auto; color: var(--nexus-green); opacity: 0; transition: 0.3s; }
+.v-item:hover .v-arrow { opacity: 1; transform: translateX(5px); }
+
+/* SIDEBAR CARDS */
+.news-card, .tip-card { 
+    border-radius: 24px; overflow: hidden; position: relative; 
+    min-height: 200px; border: 1px solid var(--nexus-border);
+}
+.news-card { background-size: cover; background-position: center; display: flex; align-items: flex-end; }
+.news-overlay { position: absolute; inset: 0; background: linear-gradient(to top, #000, transparent); }
+.news-content { position: relative; z-index: 2; padding: 1.5rem; }
+.news-tag { background: #3b82f6; color: #fff; padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: 800; }
+
+.tip-img { height: 140px; background-size: cover; background-position: center; }
+.tip-body { padding: 1.5rem; background: var(--nexus-glass); }
+.tip-body h3 { font-size: 1.1rem; margin-bottom: 0.5rem; }
+.tip-body p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem; }
+.btn-outline-white { border: 1px solid #fff; color: #fff; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 0.8rem; }
+
+@media (max-width: 992px) {
+    .nexus-grid { grid-template-columns: 1fr; }
+    .hero-container { flex-direction: column; align-items: flex-start; }
+    .hero-stats { margin-top: 1rem; display: flex; }
+    .quick-stat { margin-left: 0; margin-right: 2rem; text-align: left; }
+    .action-tiles { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+{% endblock %}

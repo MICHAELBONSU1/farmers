@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - Farmer-Hub</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animations.css') }}">
+    <style>
+        .avatar-upload {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 4px solid white;
+            box-shadow: var(--shadow);
+        }
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .avatar-preview .initials {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            font-family: 'Playfair Display', serif;
+        }
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-input-wrapper input[type=file] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        .upload-icon {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 1rem;
+            background: var(--secondary);
+            color: white;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.875rem;
+        }
+        .upload-icon:hover {
+            background: var(--secondary-dark);
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <div class="auth-header">
+                <a href="{{ url_for('splash') }}" style="color: white; text-decoration: none;">
+                    <svg viewBox="0 0 40 40" width="60" height="60">
+                        <circle cx="20" cy="20" r="18" fill="#FFD700"/>
+                        <path d="M20 8c-1.5 4-6 7-6 12 0 4 2.5 7 6 7s6-3 6-7c0-5-4.5-8-6-12z" fill="#2D5A27"/>
+                    </svg>
+                </a>
+                <h1>Join Farmer-Hub</h1>
+                <p>Create your account and connect with farmers</p>
+            </div>
+            <div class="auth-body">
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                
+                <form method="POST" action="{{ url_for('signup') }}" enctype="multipart/form-data">
+                    <div class="avatar-upload">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <span class="initials" id="avatarInitials">?</span>
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label for="avatar" class="upload-icon">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                    <polyline points="17 8 12 3 7 8"/>
+                                    <line x1="12" y1="3" x2="12" y2="15"/>
+                                </svg>
+                                Upload Profile Photo
+                            </label>
+                            <input type="file" id="avatar" name="avatar" accept="image/*" onchange="previewAvatar(this)">
+                        </div>
+                        <small style="color: var(--text-light); margin-top: 0.5rem;">Required - Upload your photo</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label" for="username">Username</label>
+                        <input type="text" class="form-input" id="username" name="username" required placeholder="Choose a username">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="full_name">Full Name</label>
+                        <input type="text" class="form-input" id="full_name" name="full_name" required placeholder="Enter your full name" onchange="updateInitials()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email Address</label>
+                        <input type="email" class="form-input" id="email" name="email" required placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="location">Location</label>
+                        <input type="text" class="form-input" id="location" name="location" placeholder="City, State, Country">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="farm_type">Farm Type</label>
+                        <select class="form-select" id="farm_type" name="farm_type">
+                            <option value="">Select farm type</option>
+                            <option value="crop">Crop Farming</option>
+                            <option value="livestock">Livestock</option>
+                            <option value="mixed">Mixed Farming</option>
+                            <option value="poultry">Poultry</option>
+                            <option value="aquaculture">Aquaculture</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="password">Password</label>
+                        <input type="password" class="form-input" id="password" name="password" required placeholder="Create a password">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="confirm_password">Confirm Password</label>
+                        <input type="password" class="form-input" id="confirm_password" name="confirm_password" required placeholder="Confirm your password">
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Create Account</button>
+                </form>
+                
+                <div class="divider">or sign up with</div>
+                
+                <div class="social-login">
+                    <a href="{{ url_for('social_signup', provider='google') }}" class="social-btn google">Google</a>
+                    <a href="{{ url_for('social_signup', provider='facebook') }}" class="social-btn facebook">Facebook</a>
+                    <a href="{{ url_for('social_signup', provider='twitter') }}" class="social-btn twitter">Twitter</a>
+                </div>
+            </div>
+            <div class="auth-footer">
+                <p>Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function previewAvatar(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const preview = document.getElementById('avatarPreview');
+                    preview.innerHTML = '<img src="' + e.target.result + '" alt="Avatar">';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+        
+        function updateInitials() {
+            const fullName = document.getElementById('full_name').value;
+            if (fullName) {
+                const names = fullName.trim().split(' ');
+                let initials = '';
+                if (names.length >= 2) {
+                    initials = names[0][0] + names[names.length - 1][0];
+                } else {
+                    initials = names[0][0];
+                }
+                document.getElementById('avatarInitials').textContent = initials.toUpperCase();
+            }
+        }
+    </script>
+</body>
+</html>

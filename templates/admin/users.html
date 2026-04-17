@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}Manage Users - Admin - Farmer-Hub{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 style="color: #1A1A1A;">Manage Users</h1>
+    <p class="text-secondary" style="color: #4A4A4A;">View and manage all registered farmers</p>
+    
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline mb-4">Back to Dashboard</a>
+    
+    <!-- Search and Filter -->
+    <div class="marketplace-filters">
+        <form method="GET" action="{{ url_for('admin_users') }}" class="filter-group">
+            <div class="search-box">
+                <input type="text" name="search" placeholder="Search users..." value="{{ request.args.get('search', '') }}">
+            </div>
+            <select name="status" class="form-select" style="width: auto;">
+                <option value="">All Status</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+            <button type="submit" class="btn btn-primary">Filter</button>
+        </form>
+    </div>
+
+    <!-- Users Table -->
+    {% if users %}
+    <table style="width: 100%; border-collapse: collapse; background: rgb(232, 238, 233); box-shadow: var(--shadow); margin-top: 1rem;">
+        <thead>
+            <tr style="background: var(--primary); color: rgb(4, 240, 4);">
+                <th style="padding: 1rem; text-align: left;">Username</th>
+                <th style="padding: 1rem; text-align: left;">Email</th>
+                <th style="padding: 1rem; text-align: left;">Farm Type</th>
+                <th style="padding: 1rem; text-align: left;">Status</th>
+                <th style="padding: 1rem; text-align: left;">Joined</th>
+                <th style="padding: 1rem; text-align: right;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr style="border-bottom: 1px solid #eee; color: #1A1A1A;">
+                <td style="padding: 0.75rem;">{{ user.username }}</td>
+                <td style="padding: 0.75rem;">{{ user.email }}</td>
+                <td style="padding: 0.75rem;">{{ user.farm_type or 'N/A' }}</td>
+                <td style="padding: 0.75rem;">
+                    {% if user.is_active %}
+                    <span class="solved-badge">Active</span>
+                    {% else %}
+                    <span class="unsolved-badge">Inactive</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 0.75rem;">{{ user.created_at.strftime('%Y-%m-%d') }}</td>
+                <td style="padding: 0.75rem; text-align: right;">
+                    <a href="{{ url_for('admin_user_detail', user_id=user.id) }}" class="btn btn-sm btn-outline">View</a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    
+    <div class="alert alert-info mt-4">
+        <p style="color: #1A1A1A;">Total number of users: <strong>{{ users|length }}</strong></p>
+    </div>
+    {% else %}
+    <div class="alert alert-warning mt-4">
+        <p>No users found.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

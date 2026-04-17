@@ -1,0 +1,393 @@
+{% extends "layout.html" %}
+
+{% block title %}Marketplace - Farmer-Hub{% endblock %}
+
+{% block content %}
+<!-- Marketplace Hero -->
+<div class="marketplace-hero">
+    <div class="marketplace-hero-overlay"></div>
+    <div class="container">
+        <div class="marketplace-hero-content">
+            <h1>Farm Marketplace</h1>
+            <p>Buy and sell seeds, animals, and farm products</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <!-- Filters Section -->
+    <div class="marketplace-filters">
+        <div class="filter-group">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Search products..." value="{{ request.args.get('search', '') }}">
+            </div>
+            <select class="form-select" id="categoryFilter" onchange="filterMarketplace()">
+                <option value="">All Categories</option>
+                <option value="seeds" {% if request.args.get('category') == 'seeds' %}selected{% endif %}>🌱 Seeds</option>
+                <option value="animals" {% if request.args.get('category') == 'animals' %}selected{% endif %}>🐄 Animals</option>
+            </select>
+            <select class="form-select" id="subcategoryFilter" onchange="filterMarketplace()">
+                <option value="">All Types</option>
+                <option value="vegetables" {% if request.args.get('subcategory') == 'vegetables' %}selected{% endif %}>🥕 Vegetables</option>
+                <option value="fruits" {% if request.args.get('subcategory') == 'fruits' %}selected{% endif %}>🍎 Fruits</option>
+                <option value="grains" {% if request.args.get('subcategory') == 'grains' %}selected{% endif %}>🌾 Grains</option>
+                <option value="livestock" {% if request.args.get('subcategory') == 'livestock' %}selected{% endif %}>🐄 Livestock</option>
+                <option value="poultry" {% if request.args.get('subcategory') == 'poultry' %}selected{% endif %}>🐔 Poultry</option>
+            </select>
+            <a href="{{ url_for('create_product') }}" class="btn btn-primary"> ADD PRODUCT</a>
+        </div>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="category-tabs">
+        <a href="{{ url_for('marketplace') }}" class="category-tab {% if not request.args.get('category') %}active{% endif %}">
+            All Products
+        </a>
+        <a href="{{ url_for('marketplace', category='seeds') }}" class="category-tab {% if request.args.get('category') == 'seeds' %}active{% endif %}">
+             Seeds
+        </a>
+        <a href="{{ url_for('marketplace', category='animals') }}" class="category-tab {% if request.args.get('category') == 'animals' %}active{% endif %}">
+             Animals
+        </a>
+    </div>
+
+    <!-- Products Grid -->
+    {% if products %}
+    <div class="grid grid-4">
+        {% for product in products %}
+        <div class="card product-card" data-category="{{ product.category }}" data-subcategory="{{ product.subcategory }}">
+            <div class="card-image-container">
+                {% if product.image_url %}
+                <img src="{{ url_for('static', filename=product.image_url) }}" alt="{{ product.title }}" class="card-image">
+                {% else %}
+                <div class="card-image-placeholder">
+                    {% if product.category == 'seeds' %}
+                    <span></span>
+                    {% elif product.category == 'animals' %}
+                    <span></span>
+                    {% else %}
+                    <span></span>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <span class="product-badge">{{ product.category }}</span>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{ product.title }}</h4>
+                <p class="card-text">{{ product.description[:60] }}...</p>
+                <div class="product-info">
+                    <div class="product-price">${{ product.price }}</div>
+                    <div class="product-quantity">{{ product.quantity }} {{ product.unit }}</div>
+                </div>
+                <div class="product-seller">
+                    <span class="seller-avatar">{{ product.seller.full_name[0]|upper }}</span>
+                    <span class="seller-name">{{ product.seller.full_name }}</span>
+                </div>
+                <div class="product-actions">
+                   <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn btn-primary btn-sm">View Details</a>
+
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+        <div class="empty-state-icon" image:se></div>
+        <h3>No products found</h3>
+        <p>Be the first to list a product in this category!</p>
+        <a href="{{ url_for('create_product') }}" class="btn btn-primary">List Your First Product</a>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    
+.marketplace-hero {
+    position: relative;
+    padding: 4rem 0;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.marketplace-hero-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.marketplace-hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(45, 90, 39, 0.92) 0%, rgba(26, 71, 42, 0.88) 100%);
+}
+
+.marketplace-hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    color: rgb(252, 250, 250);
+}
+
+.marketplace-hero-content h1 {
+    color: rgb(255, 251, 251);
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.marketplace-hero-content p {
+    font-size: 1.2rem;
+    opacity: 0.95;
+}
+
+.marketplace-filters {
+    background: rgb(3, 51, 6);
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    margin-bottom: 2rem;
+}
+
+.filter-group {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-box {
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.85rem 1.25rem;
+    border: 2px solid #e0e0e0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #2D5A27;
+    box-shadow: 0 0 0 4px rgba(45, 90, 39, 0.1);
+}
+
+.form-select {
+    padding: 0.85rem 1.25rem;
+    border: 2px solid #0b7c14;
+    border-radius: 12px;
+    font-size: 1rem;
+    background: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #2D5A27;
+}
+
+.category-tabs {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+}
+
+.category-tab {
+    padding: 0.85rem 1.75rem;
+    background: white;
+    border: 2px solid #e0e0e0;
+    border-radius: 30px;
+    font-weight: 600;
+    color: #4A4A4A;
+    transition: all 0.3s ease;
+}
+
+.category-tab:hover {
+    border-color: #2D5A27;
+    color: #2D5A27;
+}
+
+.category-tab.active {
+    background: linear-gradient(135deg, #2D5A27 0%, #4A7C43 100%);
+    border-color: #2D5A27;
+    color: white;
+}
+
+.product-card {
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+.card-image-container {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: linear-gradient(135deg, #0b4710 0%, #c8e6c9 100%);
+}
+
+.card-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .card-image {
+    transform: scale(1.1);
+}
+
+.card-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 5rem;
+}
+
+.product-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(45, 90, 39, 0.9);
+    color: rgb(246, 250, 247);
+    padding: 0.35rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.product-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 1rem 0;
+}
+
+.product-price {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #2D5A27;
+}
+
+.product-quantity {
+    color: #7A7A7A;
+    font-size: 0.9rem;
+}
+
+.product-seller {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #eee;
+}
+
+.seller-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #8B4513 0%, #A65A28 100%);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.85rem;
+}
+
+.seller-name {
+    color: #4A4A4A;
+    font-size: 0.9rem;
+}
+
+.product-actions {
+    margin-top: auto;
+}
+
+.product-actions .btn {
+    width: 100%;
+    color:#0b7c14
+}
+
+.empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.empty-state-icon {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-state h3 {
+    margin-bottom: 0.5rem;
+    color: #1A1A1A;
+}
+
+.empty-state p {
+    color: #7A7A7A;
+    margin-bottom: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .filter-group {
+        flex-direction: column;
+    }
+    
+    .search-box {
+        width: 100%;
+    }
+    
+    .category-tabs {
+        justify-content: center;
+    }
+}
+</style>
+
+<script>
+function filterMarketplace() {
+    const search = document.getElementById('searchInput').value;
+    const category = document.getElementById('categoryFilter').value;
+    const subcategory = document.getElementById('subcategoryFilter').value;
+    
+    let url = '{{ url_for("marketplace") }}?';
+    if (search) url += 'search=' + encodeURIComponent(search) + '&';
+    if (category) url += 'category=' + encodeURIComponent(category) + '&';
+    if (subcategory) url += 'subcategory=' + encodeURIComponent(subcategory);
+    
+    window.location.href = url;
+}
+
+document.getElementById('searchInput').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        filterMarketplace();
+    }
+});
+</script>
+{% endblock %}
